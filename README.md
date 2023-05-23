@@ -18,7 +18,7 @@ pnpm dev
 ### Frontend
 
 - `src/app/page.js` - React page component
-- `src/components/hsl.jsx` - React HSL Component
+- `src/components/hsl.jsx` - React HSL Component [Reference](https://github.com/devcshort/react-hls/blob/master/src/index.tsx)
 
 # Role
 
