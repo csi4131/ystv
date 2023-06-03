@@ -2,5 +2,7 @@
 import { createContext } from 'react'
 
 export const HlsContext = createContext({
-  metric: {},
+  metric: {
+    events: [],
+  },
 })

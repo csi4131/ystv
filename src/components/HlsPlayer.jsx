@@ -11,7 +11,7 @@ export function HlsPlayer({
   autoPlay,
   ...props
 }) {
-  const hlsContext = useContext(HlsContext)
+  const { metric } = useContext(HlsContext)
 
   useEffect(() => {
     let hls
@@ -19,17 +19,18 @@ export function HlsPlayer({
     function initPlayer() {
       if (hls != null) hls.destroy()
 
-      const newHls = new Hls({
+      hls = new Hls({
         enableWorker: false,
         ...hlsConfig,
       })
+      const t0 = Date.now()
 
-      if (playerRef.current != null) newHls.attachMedia(playerRef.current)
+      if (playerRef.current != null) hls.attachMedia(playerRef.current)
 
-      newHls.on(Hls.Events.MEDIA_ATTACHED, () => {
-        newHls.loadSource(src)
+      hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+        hls.loadSource(src)
 
-        newHls.on(Hls.Events.MANIFEST_PARSED, () => {
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
           if (autoPlay)
             playerRef?.current
               ?.play()
@@ -41,7 +42,7 @@ export function HlsPlayer({
         })
       })
 
-      newHls.on(Hls.Events.ERROR, function (_, data) {
+      hls.on(Hls.Events.ERROR, function (_, data) {
         if (data.fatal)
           switch (data.type) {
             case Hls.ErrorTypes.NETWORK_ERROR:
@@ -56,7 +57,15 @@ export function HlsPlayer({
           }
       })
 
-      hls = newHls
+      hls.on(Hls.Events.FRAG_CHANGED, (_, data) => {
+        const event = {
+          time: Date.now() - t0,
+          type: 'frag changed',
+          name: data.frag.sn + ' @ ' + data.frag.level,
+          data: data.frag,
+        }
+        metric.events.push(event)
+      })
     }
 
     // Check for Media Source support
