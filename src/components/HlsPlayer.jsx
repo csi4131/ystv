@@ -1,6 +1,8 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import Hls from 'hls.js'
+
+import { HlsContext } from '@/store/HlsContext'
 
 export function HlsPlayer({
   hlsConfig,
@@ -9,10 +11,12 @@ export function HlsPlayer({
   autoPlay,
   ...props
 }) {
+  const hlsContext = useContext(HlsContext)
+
   useEffect(() => {
     let hls
 
-    function _initPlayer() {
+    function initPlayer() {
       if (hls != null) hls.destroy()
 
       const newHls = new Hls({
@@ -47,7 +51,7 @@ export function HlsPlayer({
               newHls.recoverMediaError()
               break
             default:
-              _initPlayer()
+              initPlayer()
               break
           }
       })
@@ -56,7 +60,7 @@ export function HlsPlayer({
     }
 
     // Check for Media Source support
-    if (Hls.isSupported()) _initPlayer()
+    if (Hls.isSupported()) initPlayer()
 
     return () => {
       if (hls != null) hls.destroy()
