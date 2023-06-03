@@ -1,8 +1,7 @@
 'use client'
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Hls from 'hls.js'
-
-import { HlsContext } from '@/store/HlsContext'
+import { HlsMetric } from '@/components/HlsMetric'
 
 export function HlsPlayer({
   hlsConfig,
@@ -11,22 +10,18 @@ export function HlsPlayer({
   autoPlay,
   ...props
 }) {
-  const { metric } = useContext(HlsContext)
-
-  useEffect(() => {
-    let hls
-
-    function initPlayer() {
-      if (hls != null) hls.destroy()
-
-      hls = new Hls({
+  const hls = globalThis.window
+    ? new Hls({
         enableWorker: false,
         ...hlsConfig,
       })
-      const t0 = Date.now()
+    : null
 
+  useEffect(() => {
+    // Init
+    function initPlayer() {
+      // Attatch
       if (playerRef.current != null) hls.attachMedia(playerRef.current)
-
       hls.on(Hls.Events.MEDIA_ATTACHED, () => {
         hls.loadSource(src)
 
@@ -42,6 +37,7 @@ export function HlsPlayer({
         })
       })
 
+      // Error on
       hls.on(Hls.Events.ERROR, function (_, data) {
         if (data.fatal)
           switch (data.type) {
@@ -56,16 +52,6 @@ export function HlsPlayer({
               break
           }
       })
-
-      hls.on(Hls.Events.FRAG_CHANGED, (_, data) => {
-        const event = {
-          time: Date.now() - t0,
-          type: 'frag changed',
-          name: data.frag.sn + ' @ ' + data.frag.level,
-          data: data.frag,
-        }
-        metric.events.push(event)
-      })
     }
 
     // Check for Media Source support
@@ -75,12 +61,14 @@ export function HlsPlayer({
       if (hls != null) hls.destroy()
     }
   }, [autoPlay, hlsConfig, playerRef, src])
+  const t0 = Date.now()
 
-  // If Media Source is supported, use HLS.js to play video
-  if (Hls.isSupported()) return <video ref={playerRef} {...props} />
-
-  // Fallback to using a regular video player if HLS is supported by default in the user's browser
-  return <video ref={playerRef} {...props} />
+  return (
+    <>
+      <video ref={playerRef} {...props} autoPlay />
+      <HlsMetric t0={t0} hls={hls} />
+    </>
+  )
 }
 
 export default HlsPlayer
