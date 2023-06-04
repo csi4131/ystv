@@ -13,10 +13,10 @@
 ```json
 [
   {
-    "id": 1,
+    
     "title": "영상 제목",
-    "duration": "02:30:00",
-    "video_url": "video.mp4"
+    "thumbnail": "https://i.postimg.cc/HLkr8LBK/img1.png",
+    "url": "video.mp4"
   },
   ...
 ]
