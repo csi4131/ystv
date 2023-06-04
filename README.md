@@ -13,12 +13,20 @@ pnpm i
 pnpm dev
 ```
 
+### 실행
+
+```bash
+pnpm build
+pnpm start
+```
+
 ## 소스코드 구조
 
 ### Frontend
 
 - `src/app/page.js` - React page component
-- `src/components/hsl.jsx` - React HSL Component [Reference](https://github.com/devcshort/react-hls/blob/master/src/index.tsx)
+- `src/components/hsl.jsx` - React HSL Component
+  [Reference](https://github.com/devcshort/react-hls/blob/master/src/index.tsx)
 
 # Role
 
