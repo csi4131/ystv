@@ -1,43 +1,49 @@
 import React, { useState } from 'react';
+import './Menu.css'; // Import the CSS file for Menu component
 
-export default function Menu({ onToggleVideo }) {
-  const [videoVisible, setVideoVisible] = useState(true);
-  const [playlistVisible, setPlaylistVisible] = useState(false);
+function Menu({ playlist, onVideoClick }) {
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [isPlaylistOpen, setIsPlaylistOpen] = useState(true);
 
-  const handleToggleVideo = () => {
-    setVideoVisible(!videoVisible);
-    onToggleVideo(!videoVisible);
+  const handleVideoClick = (video) => {
+    setSelectedVideo(video);
+    onVideoClick(video);
   };
 
-  const handleTogglePlaylist = () => {
-    setPlaylistVisible(!playlistVisible);
+  const togglePlaylist = () => {
+    setIsPlaylistOpen(!isPlaylistOpen);
   };
 
   return (
-    <nav>
-      <ul className="flex">
-        <li className="mr-4">
-          <a href="#" onClick={handleTogglePlaylist}>
-            재생목록
-          </a>
-          {playlistVisible && (
-            <ul>
-              <li>영상 제목 1</li>
-              <li>영상 제목 2</li>
-              <li>영상 제목 3</li>
-              {/* 다른 영상 제목들을 여기에 추가 */}
-            </ul>
-          )}
-        </li>
-        <li className="mr-4">
-          <a href="#">영상분석</a>
-        </li>
-        <li className="mr-4">
-          <button onClick={handleToggleVideo}>
-            {videoVisible ? '영상 숨기기' : '영상 보이기'}
-          </button>
-        </li>
-      </ul>
-    </nav>
+    <div className={`menu ${isPlaylistOpen ? 'open' : ''}`}>
+      <div className="playlist-heading" onClick={togglePlaylist}>
+        LGflix 추천작
+      </div>
+      {isPlaylistOpen && (
+        <div className="playlist-items">
+          {playlist &&
+            playlist.map((video, index) => (
+              <div
+                key={index}
+                className={`playlist-item ${
+                  selectedVideo === video ? 'selected' : ''
+                }`}
+                onClick={() => handleVideoClick(video)}
+              >
+                <div className="playlist-item-content">
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    className="thumbnail"
+                  />
+                  <h3>{video.title}</h3>
+                </div>
+              </div>
+            ))}
+        </div>
+      )}
+    </div>
   );
 }
+
+export default Menu;

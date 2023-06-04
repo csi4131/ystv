@@ -1,0 +1,56 @@
+/* HlsMetric.css */
+.button-container {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  
+  .analysis-button {
+    background-color: #e50914;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .analysis-button:hover {
+    background-color: #b2070a;
+  }
+  
+  .analysis-button.hide {
+    background-color: #8e8e8e;
+  }
+  
+  .analysis-button.hide:hover {
+    background-color: #6e6e6e;
+  }
+  
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .card {
+    background-color: #222;
+    color: #fff;
+    padding: 16px;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  .title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .chart {
+    height: 300px;
+    margin-bottom: 16px;
+  }
+  
